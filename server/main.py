@@ -1,22 +1,17 @@
 # !usr/bin/env python3
 
-from flask import Flask, render_template, request, session
-
-from forms import DFAInputForm
+from flask import Flask
+from flask_socketio import SocketIO
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "key"  # Will be changed afterwards.
+socketio = SocketIO(app)
 
 
-@app.route("/", methods=["POST", "GET"])
-def home():
-    form = DFAInputForm()
-    if request.method == "POST":
-        data = request.get_json()
-        session["data"] = data  # Save DFA data persistently.
-        return render_template("graph.html", data=data), 200
-    return render_template("dfa.html", form=form)
+@app.route("/")
+def index() -> str:
+    return ""
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    socketio.run(app, cors_allowed_origins=["http://localhost:3000"])
